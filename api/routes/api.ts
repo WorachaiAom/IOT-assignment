@@ -10,6 +10,16 @@ apiRouter.get("/", (c) => {
   return c.json({ message: "Students and Book Store API" });
 });
 
+apiRouter.use(
+  "*",
+  bearerAuth({
+    verifyToken: async (token, c) => {
+      const { API_SECRET } = env<{ API_SECRET: string }>(c);
+      return token === API_SECRET;
+    },
+  })
+);
+
 
 apiRouter.route("/books", booksRouter);
 apiRouter.route("/students", studentsRouter);
